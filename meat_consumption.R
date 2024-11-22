@@ -26,11 +26,15 @@ meat_data <- meat_data %>%
   filter(!(TIME >= 2020 & TIME <= 2028))
 
 # Now we still start making and comparing the generalised linear models
-
-
-
-
-
+# This histogram is to find the type of distribution that we are using for this model
+hist(meat_data$Value)
+# The simplest General Linear Model is a comparison between the Value and Time
+mod_1 <- glm(Value ~ TIME, data = meat_data, family = Gamma())
+summary(mod_1)
+# This shows the basic relationship between the predictor (time) and the response variable (Value)
+# However, this is not right because there are different countries and "SUBJECTS" which change the output
+# We can account for each country having a different intercepts 
+mod_2 <- glmer(Value ~ TIME + LOCATION, data = meat_data, family = Gamma())
 
 
 
