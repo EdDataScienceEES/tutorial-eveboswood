@@ -27,14 +27,17 @@ meat_data <- meat_data %>%
 
 # Now we still start making and comparing the generalised linear models
 # This histogram is to find the type of distribution that we are using for this model
+#As the data is continuous, the data is distributed through gamma distribution
 hist(meat_data$Value)
 # The simplest General Linear Model is a comparison between the Value and Time
 mod_1 <- glm(Value ~ TIME, data = meat_data, family = Gamma())
 summary(mod_1)
 # This shows the basic relationship between the predictor (time) and the response variable (Value)
+# Shows the effect of TIME on Value is very small (negative effect) and not statistically significant to 0.05 (only to 0.01)
+# This difference between null and residual deviance is small meaning TIME doesnt explain a large amount of Value
 # However, this is not right because there are different countries and "SUBJECTS" which change the output
 # We can account for each country having a different intercepts 
 mod_2 <- glmer(Value ~ TIME + LOCATION, data = meat_data, family = Gamma())
-
+summary(mod_2)
 
 
