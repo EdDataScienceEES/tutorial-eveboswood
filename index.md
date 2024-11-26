@@ -18,8 +18,8 @@ It is important to highlight that when modelling data, you should not try out di
 ##### Libraries 
 First we need to 
 
-library(dplyr)
-library(lme4)
+<pre> ```r library(dplyr)
+library(lme4) ``` </pre>
 
 
 ### The Influence of Effect Placement and Combination on the Meaning of Your Model
