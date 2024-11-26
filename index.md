@@ -15,23 +15,25 @@ In this tutorial, we will use a dataset on meat consumption through time to exam
 It is important to highlight that when modelling data, you should not try out different models and choose the one that best fits your data, as this leads to P-Hacking. However, in this tutorial, we are trying and testing the effects of the different models to demonstrate what each one means, their outputs, and in what scenarios you would choose each one.
 
 ### Some data set wrangling... (Boring but Necessary) 
-##### Libraries 
-First we need to 
+#### Libraries 
+First we need to load the packages that we will be using in this tutorial. There are only two to load. Remember to install the packages if you have not done before on the version of R that you are using, if you try to add a package to the library that you haven't installed it will give you the error message: 
+- "Error in library(dplyr) : there is no package called 'dplyr'
+Make sure that you have already downloaded the dataset and know the directory of where it is saved. The data is available in the 
 
 ```html
-<pre><code id="code-block">mod_1 <- glm(Value ~ TIME, data = meat_data, family = MASS::negative.binomial(theta = 1)) 
-summary(mod_1)</code></pre>
-<button class="copy-btn" onclick="copyCode()">Copy Code</button>
+# Title: The Influence of Effect Placement on Generalised Linear Model Outputs
+# Name: Your Name
+# Date:
 
-<script>
-  function copyCode() {
-    const code = document.getElementById("code-block");
-    navigator.clipboard.writeText(code.textContent).then(() => {
-      alert("Code copied to clipboard!");
-    });
-  }
-</script>
+# Libraries
+library(dplyr)
+library(lme4)
+# If you've never used a given package, install it with `install.packages("name")'
 
+# Download dataset - meat consumption through time
+meat_data <- read.csv("/Users/eveboswood/Downloads/meat_consumption.csv")
+# Remember to change the directory to fit where you have saved the dataset
+```
 
 
 ### The Influence of Effect Placement and Combination on the Meaning of Your Model
