@@ -14,14 +14,15 @@ library(lme4)
 meat_data <- read.csv("/Users/eveboswood/Downloads/meat_consumption.csv")
 
 # Have to do some data wrangling to make the dataset usable
-# The Poultry was measured in retail weight so we have to convert it back to carcass weight to make it comparable to the other data
+# Each Country both has a measure of meat in thousand tonnes and kg per captia
+# The Model won't work properly with both included, so we remove the thousand tonne measurements
 meat_data <- meat_data %>%
-  mutate(Value = if_else(SUBJECT == "POULTRY", Value * 1.12, Value))
+  filter(MEASURE != "THND_TONNE")
 # Filtering the data for 5 countries, because as it is the dataset is large
 # You need at least five data sets to do random effects
-# I chose the UK, USA, China, India and Ethiopia 
+# I chose Australia, USA, China, India and Ethiopia 
 meat_data <- meat_data %>%
-  filter(LOCATION %in% c("GBR", "USA", "CHN", "IND", "ETH"))
+  filter(LOCATION %in% c("AUS", "USA", "CHN", "IND", "ETH"))
 # Remove the years between 2020-2028 because this is predicted data
 meat_data <- meat_data %>%
   filter(!(TIME >= 2020 & TIME <= 2028))
@@ -51,14 +52,32 @@ meat_data$scaled_value <- meat_data$Value / max(meat_data$Value)
 # TIME and Value had to be scaled because their values were very large
 # They were causing the error message : PIRLS loop resulted in NaN value
 # They were both scaled without changing the relationship, and I kept the TIME and Value columns to allow interpretation
-mod_3 <- glmer(scaled_value ~ scaled_time + LOCATION + (1|SUBJECT), data = meat_data, family = MASS::negative.binomial(theta = 1))
+mod_3 <- glmer(scaled_value ~ scaled_time  + (1|LOCATION), data = meat_data, family = MASS::negative.binomial(theta = 1))
 summary(mod_3)
 
-mod_4 <- glmer(scaled_value ~ scaled_time * LOCATION + (1|SUBJECT), data = meat_data, family = MASS::negative.binomial(theta = 1))
+mod_4 <- glmer(scaled_value ~ scaled_time + LOCATION + (1|SUBJECT), data = meat_data, family = MASS::negative.binomial(theta = 1))
 summary(mod_4)
 
-mod_5 <- glmer(scaled_value ~ scaled_time * LOCATION + (LOCATION|SUBJECT), data = meat_data, family = MASS::negative.binomial(theta = 1))
+mod_5 <- glmer(scaled_value ~ scaled_time * LOCATION + (1|SUBJECT), data = meat_data, family = MASS::negative.binomial(theta = 1))
 summary(mod_5)
 
-mod_6 <- glmer(scaled_value ~ scaled_time + LOCATION + (LOCATION|SUBJECT), data = meat_data, family = MASS::negative.binomial(theta = 1))
+mod_6 <- glmer(scaled_value ~ scaled_time * LOCATION + (LOCATION|SUBJECT), data = meat_data, family = MASS::negative.binomial(theta = 1))
 summary(mod_6)
+
+mod_7 <- glmer(scaled_value ~ scaled_time + LOCATION + (LOCATION|SUBJECT), data = meat_data, family = MASS::negative.binomial(theta = 1))
+summary(mod_7)
+
+
+library(ggplot2)
+
+# Scatter plot with each country as a facet and color by SUBJECT
+ggplot(meat_data, aes(x = scaled_time, y = scaled_value, color = SUBJECT)) +
+  geom_point() +                            # Plot the data points
+  facet_wrap(~ LOCATION, scales = "free") +  # Facet by LOCATION (country)
+  theme_minimal() +                         # Clean theme
+  labs(title = "Meat Consumption over Time", # Title of the plot
+       x = "Year (Scaled)",                 # X-axis label
+       y = "Scaled Meat Consumption",       # Y-axis label
+       color = "Subject")                  # Legend title
+
+
