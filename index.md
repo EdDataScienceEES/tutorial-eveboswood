@@ -18,8 +18,20 @@ It is important to highlight that when modelling data, you should not try out di
 ##### Libraries 
 First we need to 
 
-<pre> ```r library(dplyr)
-library(lme4) ``` </pre>
+```html
+<pre><code id="code-block">mod_1 <- glm(Value ~ TIME, data = meat_data, family = MASS::negative.binomial(theta = 1)) 
+summary(mod_1)</code></pre>
+<button class="copy-btn" onclick="copyCode()">Copy Code</button>
+
+<script>
+  function copyCode() {
+    const code = document.getElementById("code-block");
+    navigator.clipboard.writeText(code.textContent).then(() => {
+      alert("Code copied to clipboard!");
+    });
+  }
+</script>
+
 
 
 ### The Influence of Effect Placement and Combination on the Meaning of Your Model
