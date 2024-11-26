@@ -20,12 +20,10 @@ meat_data <- meat_data %>%
   filter(MEASURE != "THND_TONNE")
 # Filtering the data for 5 countries, because as it is the dataset is large
 # You need at least five data sets to do random effects
-# I chose Australia, USA, China, India and Ethiopia 
+# I chose Australia, USA, Norway, India and Ethiopia 
 meat_data <- meat_data %>%
-  filter(LOCATION %in% c("AUS", "USA", "CHN", "IND", "ETH"))
-# Remove the years between 2020-2028 because this is predicted data
-meat_data <- meat_data %>%
-  filter(!(TIME >= 2020 & TIME <= 2028))
+  filter(LOCATION %in% c("AUS", "USA", "NOR", "IND", "ETH"))
+
 
 # Now we still start making and comparing the generalised linear models
 # This histogram is to find the type of distribution that we are using for this model
