@@ -15,10 +15,11 @@ In this tutorial, we will use a dataset on meat consumption through time to exam
 It is important to highlight that when modelling data, you should not try out different models and choose the one that best fits your data, as this leads to P-Hacking. However, in this tutorial, we are trying and testing the effects of the different models to demonstrate what each one means, their outputs, and in what scenarios you would choose each one.
 
 ### Some data set wrangling... (Boring but Necessary) 
-#### Libraries 
+#### Libraries and Datasets 
 First we need to load the packages that we will be using in this tutorial. There are only two to load. Remember to install the packages if you have not done before on the version of R that you are using, if you try to add a package to the library that you haven't installed it will give you the error message: 
 - "Error in library(dplyr) : there is no package called 'dplyr'
-Make sure that you have already downloaded the dataset and know the directory of where it is saved. The data is available in the 
+
+Make sure that you have already downloaded the dataset and know the directory of where it is saved. The data is available here or in the repository named "meat_consumption.csv"
 
 ```html
 # Title: The Influence of Effect Placement on Generalised Linear Model Outputs
@@ -34,13 +35,15 @@ library(lme4)
 meat_data <- read.csv("/Users/eveboswood/Downloads/meat_consumption.csv")
 # Remember to change the directory to fit where you have saved the dataset
 ```
+#### Let's make this data more Linear Model-friendly...
+This dataset comes with some problems that would skew the results of our models. All datasets come with different levels of useability, and their own unique problems, it is just a matter of spotting them and fixing them before you begin modelling. A good place to start is with the units... are all of the variables measured and recorded in the same way? No...
+
+
+
+
 
 
 ### The Influence of Effect Placement and Combination on the Meaning of Your Model
-
-
-
-
 
 
 
