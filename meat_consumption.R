@@ -8,6 +8,7 @@
 
 # Libraries
 library(dplyr)
+library(lme4)
 
 # Download dataset - meat consumption through time
 meat_data <- read.csv("/Users/eveboswood/Downloads/meat_consumption.csv")
@@ -30,14 +31,34 @@ meat_data <- meat_data %>%
 #As the data is continuous, the data is distributed through gamma distribution
 hist(meat_data$Value)
 # The simplest General Linear Model is a comparison between the Value and Time
-mod_1 <- glm(Value ~ TIME, data = meat_data, family = Gamma())
+
+mean_value <- mean(meat_data$Value, na.rm = TRUE)
+var_value <- var(meat_data$Value, na.rm = TRUE)
+cat("Mean abundance:", mean_value, "\nVariance:", var_value, "\n")
+# Very over dispersed
+mod_1 <- glm(Value ~ TIME, data = meat_data, family = MASS::negative.binomial(theta = 1))
 summary(mod_1)
 # This shows the basic relationship between the predictor (time) and the response variable (Value)
-# Shows the effect of TIME on Value is very small (negative effect) and not statistically significant to 0.05 (only to 0.01)
+# Shows the effect of TIME on Value is very small (negative effect) and statistically significant to 0.05 (only to 0.01)
 # This difference between null and residual deviance is small meaning TIME doesnt explain a large amount of Value
 # However, this is not right because there are different countries and "SUBJECTS" which change the output
 # We can account for each country having a different intercepts 
-mod_2 <- glmer(Value ~ TIME + LOCATION, data = meat_data, family = Gamma())
+mod_2 <- glm(Value ~ TIME + LOCATION, data = meat_data, family = MASS::negative.binomial(theta = 1))
 summary(mod_2)
+# Reduction in deviance shows the model explains more of the variability in Value 
+meat_data$scaled_time <- meat_data$TIME - 1990 + 1
+meat_data$scaled_value <- meat_data$Value / max(meat_data$Value)
+# TIME and Value had to be scaled because their values were very large
+# They were causing the error message : PIRLS loop resulted in NaN value
+# They were both scaled without changing the relationship, and I kept the TIME and Value columns to allow interpretation
+mod_3 <- glmer(scaled_value ~ scaled_time + LOCATION + (1|SUBJECT), data = meat_data, family = MASS::negative.binomial(theta = 1))
+summary(mod_3)
 
+mod_4 <- glmer(scaled_value ~ scaled_time * LOCATION + (1|SUBJECT), data = meat_data, family = MASS::negative.binomial(theta = 1))
+summary(mod_4)
 
+mod_5 <- glmer(scaled_value ~ scaled_time * LOCATION + (LOCATION|SUBJECT), data = meat_data, family = MASS::negative.binomial(theta = 1))
+summary(mod_5)
+
+mod_6 <- glmer(scaled_value ~ scaled_time + LOCATION + (LOCATION|SUBJECT), data = meat_data, family = MASS::negative.binomial(theta = 1))
+summary(mod_6)
