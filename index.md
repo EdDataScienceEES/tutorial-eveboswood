@@ -32,6 +32,7 @@ Make sure that you have already downloaded the dataset and know the directory of
 # Libraries
 library(dplyr)
 library(lme4)
+library(ggplot2)
 # If you've never used a given package, install it with `install.packages("name")'
 
 # Download dataset - meat consumption through time
@@ -57,12 +58,19 @@ meat_data <- meat_data %>%
   filter(LOCATION %in% c("AUS", "USA", "NOR", "IND", "ETH"))
 ```
 
-Okay! So the final bit of data wrangling is again filtering, but this time years. This dataset contains data from 1990-2028, bit funny as four of those years haven't happened yet right? This is because the data for years between 2020-2028 are predictions based on the previous years. We are not interested in future predictions today, just in modelling what has already happened, so lets filter those years out!
+More filtering, but this time years. This dataset contains data from 1990-2028, bit funny as four of those years haven't happened yet right? This is because the data for years between 2020-2028 are predictions based on the previous years. We are not interested in future predictions today, just in modelling what has already happened, so lets filter those years out!
 
 ```html
 # Remove the years between 2020-2028 because this is predicted data
 meat_data <- meat_data %>%
   filter(!(TIME >= 2020 & TIME <= 2028))
+```
+Okay! So the final bit of data wrangling is scaling our time and value column. This makes them more compatible with our models, as Linear models perform better when predictors are on a similar scale and are smaller numbers. We are keeping the TIME and VALUE columns in our dataset to make interpretation easier, but will be using scaled_time and scaled_value for our models. 
+
+```html
+# Scaling the data to make it more compatible for linear modelling 
+meat_data$scaled_time <- meat_data$TIME - 1990 + 1   #Starting from year 1 rather than 1990
+meat_data$scaled_value <- meat_data$Value / max(meat_data$Value) #Scaling the data around 1
 ```
 That's the data wrangled!! Well done!! Now onto the modelling, exciting stuff...
 
@@ -83,6 +91,20 @@ cat("Mean abundance:", mean_value, "\nVariance:", var_value, "\n")
 ### The Influence of Effect Placement and Combination on the Meaning of Your Model
 Okay! We made it through the coding admin, no onto the modelling! 
 We are going to start with a very simple model and build complexity as we move through the tutorial. For each model there will be an explanation as to what it means, when it would be used and how to code it. We will later look at the outputs and plot the models residuals to gain an understanding as to how each model fits our data.
+Here is a simple scatter plot for meat consumption over time in each of our countries, colour-coded to the "subject". This visualises our data distribution and will help give a general understanding of the data for when making our models.
+```html
+# Scatter plot with each country as a facet and color by SUBJECT to help visualise our dataset
+ggplot(meat_data, aes(x = scaled_time, y = scaled_value, color = SUBJECT)) +
+  geom_point() +                            # Plots the data points
+  facet_wrap(~ LOCATION, scales = "free") +  # Facet by LOCATION (country)
+  theme_minimal() +                         # Clean theme
+  labs(title = "Meat Consumption over Time", # Title of the plot
+       x = "Year (Scaled)",                 # X-axis label
+       y = "Scaled Meat Consumption",       # Y-axis label
+       color = "Subject")                  # Legend title
+```
+
+
 Some lingo before we start:
 - The predictor: also known as the independent variable is the variable used to explain/predict the outcome of the response variable
 - The response variable: also known as the dependent variable is the variable you are trying to model/predict.
@@ -94,14 +116,29 @@ To begin with, we are just going to model the relationship between the predictor
 This models the effect of time on meat consumption, without considering that there are different types of meat and different countries.
 
 ```html
-# A General Linear Model comparing the effect of TIME on Value (value of meat consumption
-mod_1 <- glm(Value ~ TIME, data = meat_data, family = MASS::negative.binomial(theta = 1))
+# A General Linear Model comparing the effect of time on value (value of meat consumption
+# This ignores all other factors that may affect mean consumption except for time
+mod_1 <- glm(scaled_value ~ scaled_time, data = meat_data, family = MASS::negative.binomial(theta = 1))
 ```
+This models that there is a single line with one intercept and one gradient that averages the value for meat consumption over time for all countries and all types of meat. It assumes that the relationship between the value and time is the same across the board. But we know that this isn't right because we have seen in our scatter plot (above) that meat consumption varies between countries, and between subjects. In all of our models the predictor value 
+You would use mod_1 if you had a simple relationship between the response variable and one predictor without accounting for any additional factors or grouping factors. This is a rare scenario and is not often seen in ecology because relationships in nature tend to be complex.
 
+#### Model 2 - General Linear Model with two predictors
+This model is slightly more advanced as it contains two predictor values, which each have their own individual effect on the response variable. It is still a General Linear Model and contains no mixed effects, but it does model the countries as fixed effects. This model accounts for time trends while recognises that meat consumption may vary by country.
 
+```html
+# A General Linear Model comparing the effect of time on value while allowing for variation in the starting value by country
+mod_2 <- glm(scaled_value ~ scaled_time + LOCATION, data = meat_data, family = MASS::negative.binomial(theta = 1))
+``` 
+This model uses '+ LOCATION' to add a fixed effect to our model. Because location is added rather than multiplied it allows each coutry to have a different 'intercept', however it is saying that each countries line will have the same gradient. You would use this model if you believe that your fixed effects will all have different starting points (intercepts) but have the same trend in relation to the predictor.
 
+#### Model 3 - General Linear Model with a multiplied fixed effect
+In model 2 the fixed effect 'LOCATION' was added to our model. In model three the same fixed effect is present, but this time it is multiplied. The interaction term 'scaled_time * LOCATION' allows th model to estimate different slopes (gradients) for each country. This means that the effect of time on meat consumption can vary per country, so they can have different intercepts, and different gradients.
 
-
+```html
+# A General Linear Model comparing the effect of time on value whilst allowing for variation both in model intercept and gradient, dependent on country
+mod_3 <- glm(scaled_value ~ scaled_time * LOCATION, data = meat_data, family = MASS::negative.binomial(theta = 1))
+```
 
 
 
