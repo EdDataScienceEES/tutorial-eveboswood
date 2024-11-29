@@ -174,7 +174,7 @@ This model is saying: 'how does meat consumption change over time and how does t
 
 ![Rplot_mod_5](https://github.com/user-attachments/assets/0e783031-0682-48f6-a631-9e5326a4a00a)
 
-Figure 4 - An example of what data plotted using the assumptions of Model 5 could look like. The data is split into the countries, with each country having a different gradient on meat consumption change over time. There are different intercepts for each different Subject, but all of the subjects have the same rate of change over time (gradient). The data used is not actual data from the dataset, this is just fictional to demonstrate what the model is assuming.
+Figure 4 - An example of what data plotted using the data produced by Model 5 could look like. The data is split into the countries, with each country having a different gradient on meat consumption change over time. There are different intercepts for each different Subject, but all of the subjects have the same rate of change over time (gradient). The data used is not actual data from the dataset, this is just fictional to demonstrate what the model is assuming.
 
 #### Model 6 - Our Final General Linear Mixed Model
 Hurray! You've made it to the last model! This time we are keeping our fixed effect exactly the same, but changing our random effect. The random effect is still going to be SUBJECT (type of meat), but, unlike model 5, we are going to allow for changes in the rate of change for each meat type, rather than assuming that they all follow the same gradient. To do this, we change the exchange the 1 that was inside the brackets with an effect of our choice. Here we are going to use LOCATION. This is then saying that each combination of meat type and county has its own baseline level of meat consumption (intercept) whilst also allowing for differences in how value changes over time between different combinations of LOCATION and SUBJECT.
@@ -185,8 +185,12 @@ mod_6 <- glmer(scaled_value ~ scaled_time * LOCATION + (LOCATION|SUBJECT), data 
 ```
 Remember that the model output still won't contain information about the random effect, we are just telling the model the the type of meat is going to change the rate of consumption over time, within each country. If we wanted to know HOW the different types of meat vary, we would take them out of the brakets and make SUBJECT a fixed effect.
 
-Well done! Do you think you get it?
+![Rplot_mod_6](https://github.com/user-attachments/assets/ef6e4851-1883-4f97-8271-a14d08b40996)
 
+
+Figure 5 - An example of what data plotted using the data produced by Model 6 could look like. The data is again split into the countries, but this time the subjects within each country each have different intercepts AND different gradients. So each type of meat in each country can have a unique rate of change of consumption over time (gradient), and a unique starting point (intercept). The data used is not actual data from the dataset, this is just fictional to demonstrate what the model is assuming.
+
+Well done! Do you think you get it?
 
 
 
