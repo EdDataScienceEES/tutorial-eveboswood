@@ -229,12 +229,19 @@ summary(mod_3)
 A longer output again! This time we have values for the intercept and gradient of each countries line! That is not surprising given what we know about Model 3, and from what we can interpret from Figure 3. Each country now has its own line with its own intercept and gradient, showing the starting point and the change over time for each countries meat consumption, compared to Australia. The values for intercepts are the same as our Model 2, but now there are also values for gradient. Remember these are log values and can be changed to a more easily interpretable straight line on a log scale by using 'exp()'. 
 
 #### Model 4
-Now, our first summary of a model with a random effect! Do you remember what we were technically saying when we made something a random effect? We were telling the model that 'There will be variation due to this (in this case LOCATION) but we don't want to know how it effects the model. So any guesses on what it will do to the output? Longer or shorter? 
+Now, our first summary of a model with a random effect! Do you remember what we were technically saying when we made something a random effect? We are telling the model that 'There will be variation due to this (in this case LOCATION) but we don't want to know how it effects the model. So any guesses on what it will do to the output? Longer or shorter? 
 ```html
 # Summary for Model 4
 summary(mod_4)
 ```
-Shorter! Actually just the same as Model 1, because we don't want to know each intercept of country, we just want the model to know that there will differences due to this.
+Shorter! Actually just the same length as Model 1. This is because we don't want to know the intercept of each country, we just want the model to know that there will differences due to this. 
+
+#### Model 5
+Back to bigger (and better?) models. Now we have fixed and random effects!
+```html
+# Summary for Model 5
+summary(mod_5)
+```
 
 
 
