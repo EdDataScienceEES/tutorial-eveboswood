@@ -7,7 +7,7 @@
 
 ### Tutorial pre-requisites
 - A basic knowledge of data wrangling
-- How to code Generalised Linear Models and Generalised Linear Mixed Models including what distribution to use
+- A basic understanding of how to code Generalised Linear Models and Generalised Linear Mixed Models and how to interpret their outputs
 
 ### Introduction
 Hello Linear Modellers! Welcome to this tutorial on how and why the placement of effects within your Generalised Linear (Mixed) Models influences the outputs of your models, what the outputs mean and in what scenario you should use each one. 
@@ -124,7 +124,7 @@ You would use mod_1 if you had a simple relationship between the response variab
 
 ![Rplot_Mod_1](https://github.com/user-attachments/assets/2292a79f-cccc-459b-96e2-670570f11c9c)
 
-Figure 1 - An example of what data plotted using the simplicity of Model 1 could look like. The data used is not actual data from the dataset, this is just fictional to demonstrate what the model is assuming.
+Figure 1 - An example of what data plotted using the simplicity of Model 1 could look like on a log-log scale. The data used is not actual data from the dataset, this is just fictional to demonstrate what the model is assuming.
 
 #### Model 2 - General Linear Model with two predictors
 This model is slightly more advanced as it contains two predictor values, which each have their own individual effect on the response variable. It is still a General Linear Model and contains no mixed effects, but it does model the countries as fixed effects. This model accounts for time trends while recognises that meat consumption may vary by country.
@@ -138,7 +138,7 @@ This model uses '+ LOCATION' to add a fixed effect to our model. Because locatio
 ![Rplot_mod_2](https://github.com/user-attachments/assets/21f038aa-8c87-4d4f-a15d-d503c8f15430)
 
 
-Figure 2 - An example of what data plotted using the assumptions of Model 2 could look like. Each countries data has different intercepts, however they all have the same rate of change of meat consumption over time (gradient). The data used is not actual data from the dataset, this is just fictional to demonstrate what the model is assuming.
+Figure 2 - An example of what data plotted using the assumptions of Model 2 could look like on a log-log scale. Each countries data has different intercepts, however they all have the same rate of change of meat consumption over time (gradient). The data used is not actual data from the dataset, this is just fictional to demonstrate what the model is assuming.
 
 #### Model 3 - General Linear Model with a multiplied fixed effect
 In model 2 the fixed effect 'LOCATION' was added to our model. In model three the same fixed effect is present, but this time it is multiplied. The interaction term 'scaled_time * LOCATION' allows the model to estimate different slopes (gradients) for each country. This means that the effect of time on meat consumption can vary per country, so they can have different intercepts, and different gradients.
@@ -151,7 +151,7 @@ You would use a model with this format, containing a multiplicative interaction 
 
 ![Rplot_mod_3](https://github.com/user-attachments/assets/27db3c08-c5d7-4a55-89fe-402f17fb3bf5)
 
-Figure 3 - An example of what data plotted using the assumptions of Model 3 could look like. The data had different intercepts and different rates of change over time depending on country. The data used is not actual data from the dataset, this is just fictional to demonstrate what the model is assuming.
+Figure 3 - An example of what data plotted using the assumptions of Model 3 could look like on a log-log scale. The data had different intercepts and different rates of change over time depending on country. The data used is not actual data from the dataset, this is just fictional to demonstrate what the model is assuming.
 
 #### Model 4 - General Linear Mixed Model 
 Hurray! Onto our first Mixed Model! In mixed models, we get to include random effects. Random effects are used when you want to account for variability across groups or units, but you do not want to know in what way each group varies. This tells the model that there will be changes in the data between the groups specified within the random effect, and the model will account for this, but it will not tell you the variation within the output. A random effect, written as (1 | LOCATION) will allow variation in intercepts for each country's meat consumption (baseline consumption in 1990) but does not allow for varying gradients. This is similar to a fixed effect that is added rather than multiplied, except the output is different.
@@ -174,7 +174,7 @@ This model is saying: 'how does meat consumption change over time and how does t
 
 ![Rplot_mod_5](https://github.com/user-attachments/assets/0e783031-0682-48f6-a631-9e5326a4a00a)
 
-Figure 4 - An example of what data plotted using the data produced by Model 5 could look like. The data is split into the countries, with each country having a different gradient on meat consumption change over time. There are different intercepts for each different Subject, but all of the subjects have the same rate of change over time (gradient). The data used is not actual data from the dataset, this is just fictional to demonstrate what the model is assuming.
+Figure 4 - An example of what data plotted using the data produced by Model 5 could look like on a log-log scale. The data is split into the countries, with each country having a different gradient on meat consumption change over time. There are different intercepts for each different Subject, but all of the subjects have the same rate of change over time (gradient). The data used is not actual data from the dataset, this is just fictional to demonstrate what the model is assuming.
 
 #### Model 6 - Our Final General Linear Mixed Model
 Hurray! You've made it to the last model! This time we are keeping our fixed effect exactly the same, but changing our random effect. The random effect is still going to be SUBJECT (type of meat), but, unlike model 5, we are going to allow for changes in the rate of change for each meat type, rather than assuming that they all follow the same gradient. To do this, we change the exchange the 1 that was inside the brackets with an effect of our choice. Here we are going to use LOCATION. This is then saying that each combination of meat type and county has its own baseline level of meat consumption (intercept) whilst also allowing for differences in how value changes over time between different combinations of LOCATION and SUBJECT.
@@ -188,15 +188,61 @@ Remember that the model output still won't contain information about the random 
 ![Rplot_mod_6](https://github.com/user-attachments/assets/ef6e4851-1883-4f97-8271-a14d08b40996)
 
 
-Figure 5 - An example of what data plotted using the data produced by Model 6 could look like. The data is again split into the countries, but this time the subjects within each country each have different intercepts AND different gradients. So each type of meat in each country can have a unique rate of change of consumption over time (gradient), and a unique starting point (intercept). The data used is not actual data from the dataset, this is just fictional to demonstrate what the model is assuming.
+Figure 5 - An example of what data plotted using the data produced by Model 6 could look like on a log-log scale. The data is again split into the countries, but this time the subjects within each country each have different intercepts AND different gradients. So each type of meat in each country can have a unique rate of change of consumption over time (gradient), and a unique starting point (intercept). The data used is not actual data from the dataset, this is just fictional to demonstrate what the model is assuming.
 
-Well done! Do you think you get it?
+Well done! Do you think you get it? Now let's look at how the differences in these models change the outputs and the compatibility of each one to our specific dataset.
+
+
+### Model Outputs 
+
+Now we know what each different model means and in what scenario we would use them, it is good to have a look at the outputs and see how the differences in the modelling change the models fit to the data. This is just an activity to help us understand what the different outputs mean to help us get to grips with when each model should be used. This is NOT what you should do with your data. The model that you chose to use should be completely dependent on your data and research question, and you should not go around fitting many models and seeing which works best. With that said, let's do exactly that...
+
+There are many ways that we can look at how each of our models that we have made fits the data. Today we are going to look at the two most common ones, the model output itself, and diagnostic plotting. 
+
+#### Model Outputs - Model 1
+
+To code to get the model output of a Model is easy, to interpret it is less simple. Because we are more focussed on what each model means and when we would use it, we are just going to look at a simple overview of each output. We will start with our simplest model (mod_1) and work our way up. To get our model output we use "summary(name_of_your_model)"
+
+```html
+# Our first model summary
+summary(mod_1)
+```
+This model output gives the Intercept and Gradient (scaled_time) of one line on a log scale. This makes sense from what we learnt about Model 1, demonstrated in Figure 1, with one straight line which has one intercept and one gradient. Both the intercept and the gradient have an estimate, a standard error a t-value and a p-value. To get the gradient and intercept of this line on a log-log scale (like it appears in Figure 1) you would calculate the exponential of each number, done in R using exp(). 
+The only number we are really that bothered about today is the 'scaled_time' P-Value ('Pr(>|t|)') which is 0.425, not significant.
+
+#### Model 2
+Again, a simple call to get the summary of model 2:
+
+```html
+# Summary for Model 2
+summary(mod_2)
+```
+This summary is longer! Why? Remember back to Model 2 and Figure 2. Our General Linear Model had countries added as a fixed effect, which gave us five different intercepts BUT because LOCATION was added rather than multiplied, only one gradient. So we have only one value for 'scaled_time', which is the gradient for all of the countries on a log scale, but we have five values for intercept (the first is just called 'intercept' but refers to Australia). Each countries value is not its actual expenential gradient/intercept, but the difference between that countries value and Australia's value. The  P-Values for every countries intercept and the gradient are now significant, showing that simply adding LOCATION has accounted for a significant proportion of the variation in 'scaled_value'.
+
+#### Model 3 
+You must be getting the hang of this by now...
+
+```html
+# Summary for Model 3
+summary(mod_3)
+```
+A longer output again! This time we have values for the intercept and gradient of each countries line! That is not surprising given what we know about Model 3, and from what we can interpret from Figure 3. Each country now has its own line with its own intercept and gradient, showing the starting point and the change over time for each countries meat consumption, compared to Australia. The values for intercepts are the same as our Model 2, but now there are also values for gradient. Remember these are log values and can be changed to a more easily interpretable straight line on a log scale by using 'exp()'. 
+
+#### Model 4
+Now, our first summary of a model with a random effect! Do you remember what we were technically saying when we made something a random effect? We were telling the model that 'There will be variation due to this (in this case LOCATION) but we don't want to know how it effects the model. So any guesses on what it will do to the output? Longer or shorter? 
+```html
+# Summary for Model 4
+summary(mod_4)
+```
+Shorter! Actually just the same as Model 1, because we don't want to know each intercept of country, we just want the model to know that there will differences due to this.
 
 
 
 ### Challenge
 
 
+
+'All of the countries are grouped about an average!'
 
 
 
