@@ -177,13 +177,13 @@ This model is saying: 'how does meat consumption change over time and how does t
 Figure 4 - An example of what data plotted using the data produced by Model 5 could look like on a log-log scale. The data is split into the countries, with each country having a different gradient on meat consumption change over time. There are different intercepts for each different Subject, but all of the subjects have the same rate of change over time (gradient). The data used is not actual data from the dataset, this is just fictional to demonstrate what the model is assuming.
 
 #### Model 6 - Our Final General Linear Mixed Model
-Hurray! You've made it to the last model! This time we are keeping our fixed effect exactly the same, but changing our random effect. The random effect is still going to be SUBJECT (type of meat), but, unlike model 5, we are going to allow for changes in the rate of change for each meat type, rather than assuming that they all follow the same gradient. To do this, we change the exchange the 1 that was inside the brackets with an effect of our choice. Here we are going to use LOCATION. This is then saying that each combination of meat type and county has its own baseline level of meat consumption (intercept) whilst also allowing for differences in how value changes over time between different combinations of LOCATION and SUBJECT.
+Hurray! You've made it to the last model! This time we are keeping our fixed effect exactly the same, but changing our random effect. The random effect is still going to be SUBJECT (type of meat), but, unlike model 5, we are going to allow for changes in the rate of change for each meat type, rather than assuming that they all follow the same gradient. To do this, we exchange the 1 that was inside the brackets with an effect of our choice. Here we are going to use LOCATION. This is then saying that each combination of meat type and county has its own baseline level of meat consumption (intercept) whilst also allowing for differences in how value changes over time between different combinations of LOCATION and SUBJECT.
 
 ```html
 # A General Linear Mixed Model that allows for differences in intercept and gradient for both the fixed and the random effect
 mod_6 <- glmer(scaled_value ~ scaled_time * LOCATION + (LOCATION|SUBJECT), data = meat_data, family = MASS::negative.binomial(theta = 1))
 ```
-Remember that the model output still won't contain information about the random effect, we are just telling the model the the type of meat is going to change the rate of consumption over time, within each country. If we wanted to know HOW the different types of meat vary, we would take them out of the brakets and make SUBJECT a fixed effect.
+Remember that the model output still won't contain information about the random effect, we are just telling the model the the type of meat is going to change the rate of consumption over time, within each country. If we wanted to know HOW the different types of meat vary, we would take them out of the brackets and make SUBJECT a fixed effect.
 
 ![Rplot_mod_6](https://github.com/user-attachments/assets/ef6e4851-1883-4f97-8271-a14d08b40996)
 
@@ -266,22 +266,36 @@ Learning when and how to use and interpret Linear Models through these six model
 
 
 ### Challenge
-Which TYPE of model (between 1-6) should be used for each of the following scenarios:
+Which TYPE of model (between 1-6) should be used for each of the following scenarios? Give write an example piece of code for each scenario (ignore 'data = ' and assume a normal distribution)
 
 #### Scenario 1:
-You are investigating the general recovery rates of fish after a pollution event in a lake. You have data for the health status over time for several different fish species, but you don't want to know how each species responds, just the general trend. You expect that each fish species will start at a different health levels, but they will all follow the same general trend over time.
+You are investigating the general recovery rates of fish after a pollution event in a lake. You have data for the health status over time for several different fish species, but you don't want to know how each species responds, just the general trend. You expect that each fish species will start at different health levels, but they will all follow the same general trend over time.
 
 #### Scenario 2:
-You are studying the population of an endangered bird species in several national parks over time. You expect that each national park might have a different rate of population growth (different slopes) over time.
+You are studying the population of an endangered bird species in several national parks over time. You expect that each national park might have a different rate of population growth over time, and you want to know which parks have the highest and lowest growth.
+
+#### Scenario 3:
+You are researching the impact of a temperature change on tree growth in three national parks. You want to model how tree growth varies across time in these parks, but you expect no significant variation between different sites.
+
+#### Scenario 4:
+You have collected data from six different regions of a national park to see if there is a significant difference in change in abundance between regions. There are different species within each region. You want to know how abundance is changing over time within each region, and you suspect that species has affected abundance for a long time, but you don't need to know how.
 
 ### Challenge Answers:
 #### Scenario 1:
 Model 4 - Model 4 accounts for random intercepts for individual fish species, which allows for differences in the starting health levels of the fish within the lake while still modelling the fixed effects of time. This model captures individual variation in starting health while keeping the time trend consistent across all fish.
+code: mod_4 <- glmer(health ~ time + (1 | SPECIES))
 
 #### Scenario 2:
-Model 3 - Model 3 includes an interaction between time and location (national parks), allowing each park to have its own rate of population growth. This model captures the varying growth slopes in different parks while still accounting for the overall effect of time.
+Model 3 - Model 3 measures the general change in bird abundance over time whilst including an interaction between time and location, allowing each park to have its own rate of population growth and intercept. 
+code: mod_3 <- glm(abundance ~ time * LOCATION)
 
+#### Scenario 3:
+Model 1 - Model 1 would be suitable because you are interested in how this species responds to temperature change, but location does not vary how the trees respond to the environmental change.
+code: mod-1 <- glm(growth ~ temperature)
 
+#### Scenario 4:
+Model 6 - Model 6 would be required as, in this scenario, both baseline abundance and rate of change vary across each species, in relation to region and these variations are likely correlated. We are foremost interested in how abundance changes between regions, but we need to control for different species within each region, which will each have a different intercept and gradient. We therefore need the fixed effect of region and the random effect of species, which will vary in starting point and over time in relation to region.
+Code: mod_6 <- glmer(abundance ~ time * REGION + (REGION | SPECIES))
 
-
-
+WELL DONE!! YOU MADE IT!! 
+You are now a modelling wizz and hopefully have a solid understanding of which model is best suited for you dataset and experimental question! Enjoy your newfound knowledge, but remember... NO P-HACKING ;)
