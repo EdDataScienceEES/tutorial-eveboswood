@@ -242,7 +242,10 @@ Back to bigger (and better?) models. Now we have fixed and random effects!
 # Summary for Model 5
 summary(mod_5)
 ```
+Now we have a more complex output due to the random effect of SUBJECT. The random effect does not appear in the output because we are telling the model that we don't want to know how SUBJECT affects the results. Remember back to Figure 4, each SUBJECT has the same gradient, but a different intercept, so the different types of meat account for some of the variation that were attributed to location in previous models. This reduces the P-Values, but makes the output more accurate.
 
+#### Model 6
+Our final model output
 
 
 ### Challenge
