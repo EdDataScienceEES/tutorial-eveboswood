@@ -89,8 +89,8 @@ cat("Mean abundance:", mean_value, "\nVariance:", var_value, "\n")
 ```
 
 ### The Influence of Effect Placement and Combination on the Meaning of Your Model
-Okay! We made it through the coding admin, no onto the modelling! 
-We are going to start with a very simple model and build complexity as we move through the tutorial. For each model there will be an explanation as to what it means, when it would be used and how to code it. We will later look at the outputs and plot the models residuals to gain an understanding as to how each model fits our data.
+Okay! We made it through the coding admin, now onto the modelling! 
+We are going to start with a very simple model and build complexity as we move through the tutorial. For each model there will be an explanation as to what it means, when it would be used and how to code it. We will later look at the outputs to gain an understanding as to how each model fits our data.
 Here is a simple scatter plot for meat consumption over time in each of our countries, colour-coded to the "subject". This visualises our data distribution and will help give a general understanding of the data for when making our models.
 ```html
 # Scatter plot with each country as a facet and color by SUBJECT to help visualise our dataset
@@ -195,19 +195,19 @@ Well done! Do you think you get it? Now let's look at how the differences in the
 
 ### Model Outputs 
 
-Now we know what each different model means and in what scenario we would use them, it is good to have a look at the outputs and see how the differences in the modelling change the models fit to the data. This is just an activity to help us understand what the different outputs mean to help us get to grips with when each model should be used. This is NOT what you should do with your data. The model that you chose to use should be completely dependent on your data and research question, and you should not go around fitting many models and seeing which works best. With that said, let's do exactly that...
+Now we know what each different model means and in what scenario we would use them, we are going to have a look at the outputs and see how the differences in the modelling change the model's fit to the data. This is just an activity to help us understand what the different outputs mean which will help you gain a deeper understanding of when each model should be used, and what they are telling you. However, trying out each model and checking each output is NOT what you should do with your data. The model that you choose to use should be completely dependent on your data and research question, and you should not go around fitting many models and seeing which works best. With that said, let's do exactly that...
 
-There are many ways that we can look at how each of our models that we have made fits the data. Today we are going to look at the two most common ones, the model output itself, and diagnostic plotting. 
+There are many ways that we can look at how each of our models fits the dataset. Today we are going to look at the most common and straightforward one, the model output itself. 
 
 #### Model Outputs - Model 1
 
-To code to get the model output of a Model is easy, to interpret it is less simple. Because we are more focussed on what each model means and when we would use it, we are just going to look at a simple overview of each output. We will start with our simplest model (mod_1) and work our way up. To get our model output we use "summary(name_of_your_model)"
+To code to get the model output of a Model is easy, to interpret it is less simple. Because we are more focused on what each model means and when we would use it, we are just going to look at a simple overview of each output. You should already have some understanding of how to interpret model outputs, so this is just a general overview to allow us to compare what each model is doing. All gradients and intercepts that are produced by these summaries are on a log scale. We will start with our simplest model (mod_1) and work our way up. To get our model output we use "summary(name_of_your_model)"
 
 ```html
 # Our first model summary
 summary(mod_1)
 ```
-This model output gives the Intercept and Gradient (scaled_time) of one line on a log scale. This makes sense from what we learnt about Model 1, demonstrated in Figure 1, with one straight line which has one intercept and one gradient. Both the intercept and the gradient have an estimate, a standard error a t-value and a p-value. To get the gradient and intercept of this line on a log-log scale (like it appears in Figure 1) you would calculate the exponential of each number, done in R using exp(). 
+This model output gives the Intercept and Gradient (labelled scaled_time) of one line on a log scale. This makes sense from what we learnt about Model 1, demonstrated in Figure 1, with one straight line which has one intercept and one gradient. Both the intercept and the gradient have an estimate, a standard error a t-value and a p-value. To get the gradient and intercept of this line on a log-log scale (like it appears in Figure 1) you would calculate the exponential of each number, done in R using exp(). This is true for all proceeding models too, so keep that in mind.
 The only number we are really that bothered about today is the 'scaled_time' P-Value ('Pr(>|t|)') which is 0.425, not significant.
 
 #### Model 2
@@ -217,7 +217,7 @@ Again, a simple call to get the summary of model 2:
 # Summary for Model 2
 summary(mod_2)
 ```
-This summary is longer! Why? Remember back to Model 2 and Figure 2. Our General Linear Model had countries added as a fixed effect, which gave us five different intercepts BUT because LOCATION was added rather than multiplied, only one gradient. So we have only one value for 'scaled_time', which is the gradient for all of the countries on a log scale, but we have five values for intercept (the first is just called 'intercept' but refers to Australia). Each countries value is not its actual expenential gradient/intercept, but the difference between that countries value and Australia's value. The  P-Values for every countries intercept and the gradient are now significant, showing that simply adding LOCATION has accounted for a significant proportion of the variation in 'scaled_value'.
+This summary is longer! Why? Remember back to Model 2 and Figure 2. Our General Linear Model had countries added as a fixed effect, which gave us five different intercepts BUT because LOCATION was added rather than multiplied, only one gradient. So we have only one value for 'scaled_time', which is the gradient for all of the countries on a log scale, but we have five values for intercept (the first is just called 'intercept' but refers to Australia). Each country's value is not its actual expenential gradient/intercept, but the difference between that specific country's value and the baseline country's (Australia) value. The P-values for each country's intercept and the overall effect of scaled_time are now significant, showing that the inclusion of LOCATION accounted for a significant portion of the variation in scaled_value.
 
 #### Model 3 
 You must be getting the hang of this by now...
@@ -226,15 +226,15 @@ You must be getting the hang of this by now...
 # Summary for Model 3
 summary(mod_3)
 ```
-A longer output again! This time we have values for the intercept and gradient of each countries line! That is not surprising given what we know about Model 3, and from what we can interpret from Figure 3. Each country now has its own line with its own intercept and gradient, showing the starting point and the change over time for each countries meat consumption, compared to Australia. The values for intercepts are the same as our Model 2, but now there are also values for gradient. Remember these are log values and can be changed to a more easily interpretable straight line on a log scale by using 'exp()'. 
+A longer output again! This time, we have log-values for both the intercept and gradient (slope) of each country's line. This is not surprising given the structure of Model 3, as it accounts for the intercept and rate of change (gradient) for each country compared to Australia. Each country now has its own line with its own intercept and gradient, showing the starting point and the change over time for meat consumption. The intercepts are similar to those in Model 2, but now we also have the gradients (slopes). Remember, these values are on the log scale and can be converted to a more interpretable scale using exp(). The interaction between scaled_time and LOCATION allows for different slopes for each country, though some of these slopes are not statistically significant.
 
 #### Model 4
-Now, our first summary of a model with a random effect! Do you remember what we were technically saying when we made something a random effect? We are telling the model that 'There will be variation due to this (in this case LOCATION) but we don't want to know how it effects the model. So any guesses on what it will do to the output? Longer or shorter? 
+Now, we have our first model with a random effect and our first Generalised Linear Mixed Model! When we add something as a random effect, we're telling the model that there will be variation due to this factor (in this case, LOCATION), but we don't need to know the exact effect of each level. So what will this do to the output? 
 ```html
 # Summary for Model 4
 summary(mod_4)
 ```
-Shorter! Actually just the same length as Model 1. This is because we don't want to know the intercept of each country, we just want the model to know that there will differences due to this. 
+It makes it shorter! Actually, just the same length as Model 1. This is because we're not estimating the intercept for each country individually. Instead, the model accounts for differences between countries in a more general way by including a random effect for LOCATION. The model knows there will be variation in the intercept due to LOCATION, but it doesn't give us individual country intercepts.
 
 #### Model 5
 Back to bigger (and better?) models. Now we have fixed and random effects!
@@ -242,13 +242,31 @@ Back to bigger (and better?) models. Now we have fixed and random effects!
 # Summary for Model 5
 summary(mod_5)
 ```
-Now we have a more complex output due to the random effect of SUBJECT. The random effect does not appear in the output because we are telling the model that we don't want to know how SUBJECT affects the results. Remember back to Figure 4, each SUBJECT has the same gradient, but a different intercept, so the different types of meat account for some of the variation that were attributed to location in previous models. This reduces the P-Values, but makes the output more accurate.
+Now we have a more complex output due to the random effect of SUBJECT. The random effect doesn’t appear directly in the output as we don’t want to know how SUBJECT specifically affects the results—just that there is variation due to SUBJECT. In Figure 4, each SUBJECT (meat type) has the same gradient but a different intercept, so differences between types of meat now account for some of the variations that were attributed to LOCATION in previous models. This generally reduces the significance of the LOCATION fixed effects, leading to smaller P-values for some of the interactions. The correlations in this output show how the intercepts and slopes for each LOCATION relate within each SUBJECT. For example, a correlation of -0.9 means that if a subject (type of meat) from a location starts with a higher value, it is likely to have a more negative slope (declining over time).
 
 #### Model 6
-Our final model output
+You made it, we are at our final model output! Model 6 is our most complex model we have fit, and perhaps over-complex for the data, but let's take a look nonetheless. 
+```html
+# Summary for Model 6
+summary(mod_6)
+```
+This model allows for variations in both the intercepts and slopes for every SUBJECT within each LOCATION, effectively estimating 20 different slopes—one for each combination of SUBJECT and LOCATION. The model also estimates the correlations between the random effects, that is, whether a deviation in the intercept for a SUBJECT in a specific LOCATION is related to the deviation in the slope. For example, if a SUBJECT in a specific location has a higher intercept, does it also have a steeper gradient (faster change over time)?
+Despite this complexity, there are still very few significant P-values, which suggests that accounting for all this variation (random effects) has explained much of the apparent significance seen in earlier models. This contrasts with the second model, where every coefficient showed significance. It also highlights how, by accounting for other sources of variation (such as SUBJECT), the apparent significance between LOCATION categories fades. However, there is a non-convergence warning, indicating that the random-effects structure might be too complex for the dataset.
+
+### Limitations
+Learning when and how to use and interpret Linear Models through these six models is useful as it offers helpful and simplified learning. However, there are also important limitations that should be kept in mind.
+
+1. It is important to highlight that the progression in this tutorial from simpler to more complex models may create the illusion that adding complexity improves the model. This is not the case and there is a risk that more complex models might fit the data too well (overfitting) so you should always consider which model to use based on what understanding you are trying to gain from modelling your specific dataset for your specific question. It is also important to remember that trying lots of different models and picking the one that fits best or has the lowest P-Value is P-Hacking, compromising the reliability of your finding.
+2. The explanations of how the models fit the data simply compares model outputs, but does not discuss model diagnostics. Model validity should be interpreted through a variety of techniques, such as residual plots, which aren't mentioned here.
+
+
 
 
 ### Challenge
+Which TYPE of model (between 1-6) should be used for each of the following scenarios:
+
+#### Scenario 1:
+
 
 
 
