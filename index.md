@@ -257,7 +257,10 @@ Despite this complexity, there are still very few significant P-values, which su
 Learning when and how to use and interpret Linear Models through these six models is useful as it offers helpful and simplified learning. However, there are also important limitations that should be kept in mind.
 
 1. It is important to highlight that the progression in this tutorial from simpler to more complex models may create the illusion that adding complexity improves the model. This is not the case and there is a risk that more complex models might fit the data too well (overfitting) so you should always consider which model to use based on what understanding you are trying to gain from modelling your specific dataset for your specific question. It is also important to remember that trying lots of different models and picking the one that fits best or has the lowest P-Value is P-Hacking, compromising the reliability of your finding.
-2. The explanations of how the models fit the data simply compares model outputs, but does not discuss model diagnostics. Model validity should be interpreted through a variety of techniques, such as residual plots, which aren't mentioned here.
+2. The explanations of how the models fit the data simply compare model summary outputs, but model diagnostics are not discussed. Model validity should be interpreted through a variety of techniques, such as residual plots, which aren't mentioned here. In your own modelling, simply summarising the model output would not be sufficient.
+3. There are also limitations of the models themselves, such as model complexity, overfitting and convergence issues (particularly in Model 6).
+4. The limitation of the assumptions of Generalised Linear Models, such as the normality of random effects, the assumption of a linear relationship between predictors and the assumption of independence of observations within each group.
+5. There are only four categories in the random effect SUBJECT. For a Generalised Linear Mixed Model to successfully estimate meaningful effects, it typically requires at least five categories within a random effect. This is perhaps why there were convergence warnings when running Model 6. 
 
 
 
@@ -266,11 +269,19 @@ Learning when and how to use and interpret Linear Models through these six model
 Which TYPE of model (between 1-6) should be used for each of the following scenarios:
 
 #### Scenario 1:
+You are investigating the general recovery rates of fish after a pollution event in a lake. You have data for the health status over time for several different fish species, but you don't want to know how each species responds, just the general trend. You expect that each fish species will start at a different health levels, but they will all follow the same general trend over time.
+
+#### Scenario 2:
+You are studying the population of an endangered bird species in several national parks over time. You expect that each national park might have a different rate of population growth (different slopes) over time.
+
+### Challenge Answers:
+#### Scenario 1:
+Model 4 - Model 4 accounts for random intercepts for individual fish species, which allows for differences in the starting health levels of the fish within the lake while still modelling the fixed effects of time. This model captures individual variation in starting health while keeping the time trend consistent across all fish.
+
+#### Scenario 2:
+Model 3 - Model 3 includes an interaction between time and location (national parks), allowing each park to have its own rate of population growth. This model captures the varying growth slopes in different parks while still accounting for the overall effect of time.
 
 
-
-
-'All of the countries are grouped about an average!'
 
 
 
