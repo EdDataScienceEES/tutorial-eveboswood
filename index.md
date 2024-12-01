@@ -8,6 +8,7 @@
 ### Tutorial pre-requisites
 - A basic knowledge of data wrangling
 - A basic understanding of how to code Generalised Linear Models and Generalised Linear Mixed Models and how to interpret their outputs
+- Note that this content is available as a website on: https://eddatascienceees.github.io/tutorial-eveboswood/
 
 ### Introduction
 Hello Linear Modellers! Welcome to this tutorial on how and why the placement of effects within your Generalised Linear (Mixed) Models influences their outputs, what the outputs mean and in what scenario you should use each one. 
@@ -310,4 +311,5 @@ You are now a modelling wizz and hopefully have a solid understanding of which m
 
 ### References:
 
-Tubiello, F. N., Salvatore, M., Cóndor Golec, R. D., Ferrara, A., Rossi, S., Biancalani, R., & Flammini, A. (2013). The FAOSTAT database of greenhouse gas emissions from agriculture. Environmental Research Letters, 8(1), 015009. Available at: https://doi.org/10.1088/1748-9326/8/1/015009
+Tubiello, F. N., Salvatore, M., Cóndor Golec, R. D., Ferrara, A., Rossi, S., Biancalani, R., & Flammini, A. (2013). The FAOSTAT database of greenhouse gas emissions from agriculture. Environmental Research Letters, 8(1), 015009. Available at: https://doi.org/10.1088/1748-9326/8/1/015009\
+
